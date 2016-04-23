@@ -132,6 +132,7 @@ public class TakePhoto {
     /**
      * 从相册选择原生的照片（不裁切）
      */
+ /*
     public void picSelectOriginal(Uri uri) {
         imageUri = uri;
         Intent intent = new Intent();
@@ -139,7 +140,7 @@ public class TakePhoto {
         intent.setType("image/*");//从所有图片中进行选择
         activity.startActivityForResult(intent, PIC_SELECT_ORIGINAL);
     }
-
+*/
 //    /**
 //     * 从相册选择照片进行裁剪
 //     *
@@ -147,6 +148,7 @@ public class TakePhoto {
 //     * @param with   裁切的宽度
 //     * @param height 裁切的高度
 //     */
+
 //    public void picSelectCrop(Uri uri, int with, int height) {
 //        imageUri = uri;
 //        Intent intent = new Intent(Intent.ACTION_PICK);
@@ -194,6 +196,7 @@ public class TakePhoto {
      *
      * @param uri 图片保存的路径
      */
+    /*
     public void picTakeOriginal(Uri uri) {
         imageUri = uri;
         Intent intent = new Intent();
@@ -201,7 +204,7 @@ public class TakePhoto {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);//将拍取的照片保存到指定URI
         activity.startActivityForResult(intent, PIC_TAKE_ORIGINAL);
     }
-
+*/
     /**
      * 从相机拍取照片进行裁剪
      * @param uri 图片保存的路径
