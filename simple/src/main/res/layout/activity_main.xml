@@ -1,9 +1,20 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:fitsSystemWindows="true"
+    tools:context="com.jph.simple.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FastImgSearch"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+    </android.support.design.widget.AppBarLayout>
+
     <Button
         android:id="@+id/btnCropFromGallery"
         android:layout_width="wrap_content"
@@ -23,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="cropPic"
+        android:layout_marginTop="50dp"
         android:text="从相机拍取照片进行裁剪" />
 <!--
     <Button
@@ -38,13 +50,24 @@
         android:layout_height="wrap_content"
         android:onClick="cropPic"
         android:visibility="invisible"
+        android:layout_marginTop="100dp"
+        android:text="上传到服务器" />
+
+    <Button
+        android:id="@+id/Search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="sendMessage"
+        android:visibility="invisible"
+        android:layout_marginTop="150dp"
         android:text="即刻搜索！" />
 
     <ImageView
         android:id="@+id/imgShow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="50dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginLeft="50dp"
         android:scaleType="fitCenter" />
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

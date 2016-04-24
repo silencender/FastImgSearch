@@ -1,6 +1,6 @@
 package com.jph.takephoto;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,7 +17,7 @@ import com.jph.takephoto.uitl.Utils;
  * @author JPH
  * @Date:2015.08.05
  */
-public class TakePhotoActivity extends Activity implements TakePhoto.TakeResultListener,CompressListener {
+public class TakePhotoActivity extends AppCompatActivity implements TakePhoto.TakeResultListener,CompressListener {
     private TakePhoto takePhoto;
     protected ProgressDialog wailLoadDialog;
     /**

@@ -6,7 +6,7 @@ android {
     //useLibrary 'org.apache.http.legacy'
     defaultConfig {
 //        applicationId "com.jph.takephoto"
-        minSdkVersion 8
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -38,4 +38,6 @@ dependencies {
     //compile "org.apache.httpcomponents:httpcore:4.4.4"
     //compile "org.apache.httpcomponents:httpmime:4.5.2"
 //    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
 }

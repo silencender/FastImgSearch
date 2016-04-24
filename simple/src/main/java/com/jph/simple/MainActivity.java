@@ -1,21 +1,27 @@
 package com.jph.simple;
 
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-
+import android.content.Intent;
 import android.os.Bundle;
-
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
-
 import com.jph.takephoto.TakePhotoActivity;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import android.os.Environment;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
 
 
 /**
@@ -26,9 +32,12 @@ import android.widget.Button;
  * @Date:2014.10.09
  */
 public class MainActivity extends TakePhotoActivity {
-    private static final String TAG = "error";
     private ImageView imgShow;
     public String url = null;
+    public String picname = null;
+    public Uri imageUri = null;
+    public final String site = "http://android.silenceender.com/upload.php";
+    public final String imgsite = "http://android.silenceender.com/image/";
     public static MainActivity mainActivity;
     public String sDir = Environment.getExternalStorageDirectory().getPath() + "/FastImgSearch/temp/";
     @Override
@@ -42,33 +51,65 @@ public class MainActivity extends TakePhotoActivity {
         if (!destDir.exists()) {
             destDir.mkdirs();
         }
+
         final Button uploadButton = (Button) findViewById(R.id.buttonUpload);
+
         uploadButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 FileUploadTask fileuploadtask = new FileUploadTask();
-                String[] datas = {url, "http://android.silenceender.com/upload.php"};
+                String[] datas = {url, site};
                 fileuploadtask.execute(datas);
             }
         });
     }
 
+    public void sendMessage(View view){
+        String storeurl = imgsite+picname;
+        Intent intent = new Intent(MainActivity.this, Webview.class);
+        intent.putExtra("url", storeurl);
+        startActivity(intent);
+        }
+/*
+            ProgressDialog dialog = new ProgressDialog(MainActivity.mainActivity);
+            dialog.setMessage(storeurl);
+            dialog.setIndeterminate(false);
+            dialog.show();
+*/
+/*
+    public static int getResponseCode(String urlString) throws IOException {
+        URL u = new URL(urlString);
+        HttpURLConnection web =  (HttpURLConnection)  u.openConnection();
+        web.setRequestMethod("HEAD");
+        web.connect();
+        return web.getResponseCode();
+    }
+*/
+    public void setUri(){
+        picname = System.currentTimeMillis() + ".jpg";
+        url=sDir+picname;
+        imageUri = Uri.fromFile(new File(url));
+    }
+
     public void cropPic(View view) {
         //Uri imageUri = Uri.fromFile(new File(Environment.getDataDirectory(), "/temp/"+System.currentTimeMillis() + ".jpg"));
-        url=sDir+System.currentTimeMillis() + ".jpg";
-        Uri imageUri = Uri.fromFile(new File(url));
         final Button uploadButton = (Button) findViewById(R.id.buttonUpload);
+        final Button searchButton = (Button) findViewById(R.id.Search);
         switch (view.getId()) {
             case R.id.btnCropFromGallery://从相册选择照片进行裁剪
                 {
+                    setUri();
                     getTakePhoto().picSelectCrop(imageUri);
                     uploadButton.setVisibility(Button.VISIBLE);
+                    searchButton.setVisibility(Button.VISIBLE);
                 }
             break;
             case R.id.btnCropFromTake://从相机拍取照片进行裁剪
                 {
+                    setUri();
                     getTakePhoto().picTakeCrop(imageUri);
                     uploadButton.setVisibility(Button.VISIBLE);
+                    searchButton.setVisibility(Button.VISIBLE);
                 }
                 break;
             /*

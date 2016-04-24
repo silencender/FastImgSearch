@@ -11,6 +11,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
+import android.widget.Button;
+import android.widget.Toast;
+
 class FileUploadTask extends AsyncTask<String, Integer, Void> {
 
     private ProgressDialog dialog = null;
@@ -103,6 +107,7 @@ class FileUploadTask extends AsyncTask<String, Integer, Void> {
     }
     @Override
     protected void onPostExecute(Void result) {
+        Toast.makeText(MainActivity.mainActivity, "上传成功!即刻搜索！", Toast.LENGTH_LONG).show();
         try {
             dialog.dismiss();
         } catch (Exception e) {
