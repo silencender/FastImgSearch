@@ -21,7 +21,7 @@ import java.net.URL;
 import android.os.Environment;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-
+import android.widget.Toast;
 
 
 /**
@@ -33,11 +33,17 @@ import android.widget.Button;
  */
 public class MainActivity extends TakePhotoActivity {
     private ImageView imgShow;
+    public String old_url = null;
     public String url = null;
     public String picname = null;
     public Uri imageUri = null;
-    public final String site = "http://android.silenceender.com/upload.php";
-    public final String imgsite = "http://android.silenceender.com/image/";
+    //public final String site = "http://android.silenceender.com/upload.php";
+    //public final String imgsite = "http://android.silenceender.com/image/";
+    public final String site = "http://182.254.214.148/upload.php";
+    public final String imgsite = "http://182.254.214.148/image/";
+    public final String googleEngine = "https://www.google.com/searchbyimage?&image_url=";
+    public final String baiduEngine = "http://image.baidu.com/n/pc_search?queryImageUrl=";
+    public String weburl = null;
     public static MainActivity mainActivity;
     public String sDir = Environment.getExternalStorageDirectory().getPath() + "/FastImgSearch/temp/";
     @Override
@@ -57,20 +63,62 @@ public class MainActivity extends TakePhotoActivity {
         uploadButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileUploadTask fileuploadtask = new FileUploadTask();
-                String[] datas = {url, site};
-                fileuploadtask.execute(datas);
+                if(fileIsExists(url)) {
+                    FileUploadTask fileuploadtask = new FileUploadTask();
+                    String[] datas = {url, site};
+                    fileuploadtask.execute(datas);
+                    weburl=googleEngine+imgsite+picname;
+                }
+                else if(old_url != null)  {
+                    FileUploadTask fileuploadtask = new FileUploadTask();
+                    String[] datas = {old_url, site};
+                    fileuploadtask.execute(datas);
+                    weburl=googleEngine+imgsite+old_url.substring(old_url.length()-17,old_url.length());
+                }
             }
         });
     }
 
-    public void sendMessage(View view){
-        String storeurl = imgsite+picname;
-        Intent intent = new Intent(MainActivity.this, Webview.class);
-        intent.putExtra("url", storeurl);
-        startActivity(intent);
+    @Override
+    public void onResume(){
+        super.onResume();
+        final Button uploadButton = (Button) findViewById(R.id.buttonUpload);
+        final Button searchButton = (Button) findViewById(R.id.Search);
+        if(fileIsExists(url)){
+            uploadButton.setVisibility(Button.VISIBLE);
+            old_url = url;
         }
-/*
+        if(old_url != null || fileIsExists(url)) searchButton.setVisibility(Button.VISIBLE);
+    }
+
+    public void sendMessage(View view){
+        if(weburl != null) {
+            Intent intent = new Intent(MainActivity.this, Webview.class);
+            intent.putExtra("url", weburl);
+            startActivity(intent);
+        }
+        else Toast.makeText(MainActivity.mainActivity, "请先上传图像~", Toast.LENGTH_LONG).show();
+        }
+
+    public boolean fileIsExists(String strFile)
+    {
+        try
+        {
+            File f=new File(strFile);
+            if(!f.exists())
+            {
+                return false;
+            }
+
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    /*
             ProgressDialog dialog = new ProgressDialog(MainActivity.mainActivity);
             dialog.setMessage(storeurl);
             dialog.setIndeterminate(false);
@@ -92,24 +140,17 @@ public class MainActivity extends TakePhotoActivity {
     }
 
     public void cropPic(View view) {
-        //Uri imageUri = Uri.fromFile(new File(Environment.getDataDirectory(), "/temp/"+System.currentTimeMillis() + ".jpg"));
-        final Button uploadButton = (Button) findViewById(R.id.buttonUpload);
-        final Button searchButton = (Button) findViewById(R.id.Search);
         switch (view.getId()) {
             case R.id.btnCropFromGallery://从相册选择照片进行裁剪
                 {
                     setUri();
                     getTakePhoto().picSelectCrop(imageUri);
-                    uploadButton.setVisibility(Button.VISIBLE);
-                    searchButton.setVisibility(Button.VISIBLE);
                 }
             break;
             case R.id.btnCropFromTake://从相机拍取照片进行裁剪
                 {
                     setUri();
                     getTakePhoto().picTakeCrop(imageUri);
-                    uploadButton.setVisibility(Button.VISIBLE);
-                    searchButton.setVisibility(Button.VISIBLE);
                 }
                 break;
             /*

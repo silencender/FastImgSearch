@@ -17,8 +17,7 @@ public class Webview extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        String Name = intent.getStringExtra("url");
-        String weburl = "https://www.google.com/searchbyimage?&image_url="+Name;
+        String weburl = intent.getStringExtra("url");
         setContentView(R.layout.activity_webview);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle(R.string.app_name);
