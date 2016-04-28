@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="searchArray">
+        <item>Google</item>
+        <item>Baidu</item>
+    </string-array>
+
+    <string-array name="searchValues">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="uploadArray">
+        <item>ShangHai</item>
+        <item>Los Angeles</item>
+    </string-array>
+
+    <string-array name="uploadValues">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

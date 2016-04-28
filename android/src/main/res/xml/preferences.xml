@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="Settings">
+    <EditTextPreference
+        android:title="Picture Size"
+        android:key="size"
+        android:defaultValue="100"
+        android:numeric="integer"
+        android:summary="Enter the picture size to compress to (50-500KB)"></EditTextPreference>
+    <ListPreference     android:title="Search Engine"
+        android:summary="Select the search engine you would like to use"
+        android:key="selectEngine"
+        android:defaultValue="1"
+        android:entries="@array/searchArray"
+        android:entryValues="@array/searchValues" />
+    <ListPreference     android:title="Imagine Server"
+        android:summary="Select the faster imagine server"
+        android:key="selectServer"
+        android:defaultValue="1"
+        android:entries="@array/uploadArray"
+        android:entryValues="@array/uploadValues" />
+</PreferenceScreen>

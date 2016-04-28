@@ -1,1 +1,1 @@
-include ':takephoto_library', ':simple'
+include ':library', ':android'

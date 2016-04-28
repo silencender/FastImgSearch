@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">FastImgSearch</string>
+    <string name="subscription_key">b516c99894b849dd8e97e6d16759165f</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_clearcache">Clear Cache</string>
+    <string name="title_activity_webview">Webview</string>
+    <string name="LAsite">http://android.silenceender.com/upload.php</string>
+    <string name="LAimgsite">http://android.silenceender.com/image/</string>
+    <string name="shanghaisite">http://182.254.214.148/upload.php</string>
+    <string name="shanghaiimgsite">http://182.254.214.148/image/</string>
+    <string name="googleEngine">https://www.google.com/searchbyimage?&amp;image_url=</string>
+    <string name="baiduEngine">http://image.baidu.com/n/pc_search?queryImageUrl=</string>
+</resources>
