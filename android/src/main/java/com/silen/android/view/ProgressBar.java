@@ -14,7 +14,7 @@ import android.view.View;
  */
 public class ProgressBar extends View {
     private int progress = 1;
-    private final static int HEIGHT = 5;
+    private final static int HEIGHT = 4;
     private Paint paint;
     private final static int colors[] = new int[]{Color.RED, Color.RED};
     public ProgressBar(Context context, AttributeSet attrs) {

@@ -19,9 +19,9 @@ public class Webview extends AppCompatActivity {
         Intent intent = getIntent();
         String weburl = intent.getStringExtra("url");
         setContentView(R.layout.activity_webview);
-        setTitle("Browser");
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle("Browser");
+        //setTitle("Browser");
+        //Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        //myToolbar.setTitle("Browser");
         //setSupportActionBar(myToolbar);
         webView = (ProgressBarWebView) findViewById(R.id.webView);
         webView.loadUrl(weburl);

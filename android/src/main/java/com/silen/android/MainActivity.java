@@ -3,6 +3,7 @@ package com.silen.android;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -15,7 +16,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import com.google.gson.Gson;
 import com.microsoft.projectoxford.vision.VisionServiceClient;
 import com.microsoft.projectoxford.vision.VisionServiceRestClient;
@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import android.os.Environment;
 import android.view.View.OnClickListener;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
@@ -39,15 +40,15 @@ import android.widget.Toast;
  */
 public class MainActivity extends TakePhotoActivity {
     private ImageView imgShow;
-    public String old_url = null;
-    public String url = null;
-    public String picname = null;
+    private String old_url = null;
+    private String url = null;
+    private String picname = null;
     private String picurl = null;
     private boolean weballow = false;
     private int imgsize;
     private Bundle imgdata = new Bundle();    // The button to select an image
     private ImageButton uploadButton;
-    private ImageButton desbutton;
+    private ImageButton desButton;
     private EditText mEditText;
     private VisionServiceClient client;
     private SharedPreferences SP;
@@ -68,11 +69,12 @@ public class MainActivity extends TakePhotoActivity {
         }
 
         uploadButton = (ImageButton) findViewById(R.id.uploadButton);
-        desbutton = (ImageButton) findViewById(R.id.desButton);
+        desButton = (ImageButton) findViewById(R.id.desButton);
         mEditText = (EditText)findViewById(R.id.editTextResult);
-        imgShow = (ImageView) findViewById(R.id.imgShow);
+        //imgShow = (ImageView) findViewById(R.id.imgShow);
         mEditText.setText("");
         mEditText.setKeyListener(null);
+        mEditText.setTypeface(Typeface.SERIF);
         File destDir = new File(sDir);
         if (!destDir.exists()) {
             destDir.mkdirs();
@@ -108,7 +110,7 @@ public class MainActivity extends TakePhotoActivity {
                         picurl = imgsite+picname;
                         weballow = true;
                     }
-                    else Toast.makeText(MainActivity.mainActivity, "当前没有可用于上传的图片哦~", Toast.LENGTH_SHORT).show();
+                    else Toast.makeText(MainActivity.mainActivity, "当前没有可用于上传的图片哦~1", Toast.LENGTH_SHORT).show();
                 }
                 else if(old_url != null)  {
                     File old_img = new File(old_url);
@@ -119,9 +121,9 @@ public class MainActivity extends TakePhotoActivity {
                         picurl = imgsite+old_url.substring(old_url.length()-17,old_url.length());
                         weballow = true;
                     }
-                    else Toast.makeText(MainActivity.mainActivity, "当前没有可用于上传的图片哦~", Toast.LENGTH_SHORT).show();
+                    else Toast.makeText(MainActivity.mainActivity, "当前没有可用于上传的图片哦~2", Toast.LENGTH_SHORT).show();
                 }
-                else Toast.makeText(MainActivity.mainActivity, "当前没有可用于上传的图片哦~", Toast.LENGTH_SHORT).show();
+                else Toast.makeText(MainActivity.mainActivity, "当前没有可用于上传的图片哦~3"+url, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -129,8 +131,9 @@ public class MainActivity extends TakePhotoActivity {
     @Override
     public void onResume(){
         super.onResume();
-        desbutton.setEnabled(true);
+        desButton.setEnabled(true);
         imgsize = Integer.parseInt(SP.getString("size","150"));
+        mEditText.setText("");
 
         if(Integer.parseInt(SP.getString("selectEngine","1")) == 1) searchEngine = getString(R.string.googleEngine);
         else if(Integer.parseInt(SP.getString("selectEngine","1")) == 2) searchEngine = getString(R.string.baiduEngine);
@@ -179,6 +182,11 @@ public class MainActivity extends TakePhotoActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openSettings(View view){
+        Intent i = new Intent(this, MyPreferencesActivity.class);
+        startActivity(i);
     }
 
     public void sendMessage(View view){
@@ -264,8 +272,8 @@ public class MainActivity extends TakePhotoActivity {
     }
 
     public void doDescribe(View view) {
-        desbutton.setEnabled(false);
-        mEditText.setText("Describing...");
+        desButton.setEnabled(false);
+        mEditText.setText("Please wait a moment, I'm thinking...");
 
         try {
             new doRequest().execute();
@@ -300,7 +308,8 @@ public class MainActivity extends TakePhotoActivity {
 
             mEditText.setText("");
             if (e != null) {
-                mEditText.setText("Error: " + e.getMessage());
+                //mEditText.setText("Error: " + e.getMessage());
+                mEditText.setText("Oops! Maybe the image is not yet uploaded, or the Internet connection needs to be reset :-)");
                 this.e = null;
             } else {
                 Gson gson = new Gson();
@@ -312,9 +321,12 @@ public class MainActivity extends TakePhotoActivity {
 
                 for (Caption caption: result.description.captions) {
                     //mEditText.append("Caption: " + caption.text + ", confidence: " + caption.confidence + "\n");
-                    mEditText.append(caption.text + ".\nConfidence: " + Math.round(caption.confidence*1000)/10.0 + "%\n");
+                    //mEditText.append(caption.text + ".\nConfidence: " + Math.round(caption.confidence*1000)/10.0 + "%\n");
+                    if(caption.confidence>0.7) mEditText.append("I'm sure that it is "+caption.text +"! :-)\n");
+                    else if(caption.confidence>0.3) mEditText.append("I'm not very sure, but is it "+caption.text +"?\n");
+                    else mEditText.append("So hard to recognize this picture:-( But it looks like "+caption.text +".\n");
                 }
-                mEditText.append("Tags:");
+                mEditText.append("\nAnd I found following keywords related to this picture: ");
 
                 for (String tag: result.description.tags) {
                     mEditText.append(tag + "; ");
@@ -345,14 +357,15 @@ public class MainActivity extends TakePhotoActivity {
     @Override
     public void takeSuccess(Uri uri,int imgsize) {
         super.takeSuccess(uri,imgsize);
-        showImg(uri);
+        //showImg(uri);
         compressPic(uri.getPath(),imgsize);
     }
-
+/*
     private void showImg(Uri uri) {
         BitmapFactory.Options option = new BitmapFactory.Options();
         option.inSampleSize = 2;
         Bitmap bitmap = BitmapFactory.decodeFile(uri.getPath(), option);
         imgShow.setImageBitmap(bitmap);
     }
+    */
 }
