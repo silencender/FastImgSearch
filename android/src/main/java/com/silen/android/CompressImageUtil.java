@@ -1,13 +1,12 @@
-package com.silen.takephoto.uitl;
+package com.silen.android;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
-import android.preference.PreferenceManager;
+import android.view.View;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -30,7 +29,7 @@ public class CompressImageUtil {
 	 * @param imgPath 图片的保存路径
 	 * @date 2014-12-5下午11:30:43
 	 */
-	private void compressImageByQuality(final Bitmap bitmap,final String imgPath,final int imgsize){
+	private void compressImageByQuality(final Bitmap bitmap,final String imgPath,final int imgsize,final String site){
 		if(bitmap==null){
 			sendMsg(false,"像素压缩失败");
 			return;
@@ -66,6 +65,14 @@ public class CompressImageUtil {
 					sendMsg(false,"质量压缩失败");
 					e.printStackTrace();
 				}
+				finally {
+					    Looper.prepare();
+						File img = new File(imgPath);
+					    FileUploadTask fileuploadtask = new FileUploadTask();
+					    String[] datas = {imgPath, site};
+					    fileuploadtask.execute(datas);
+					    MainActivity.mainActivity.changepicurl();
+				}
 			}
 		}).start();
 	}
@@ -76,7 +83,7 @@ public class CompressImageUtil {
 	 * @return 
 	 * @date 2014-12-5下午11:30:59
 	 */
-	private void compressImageByPixel(String imgPath,int imgsize) {
+	private void compressImageByPixel(String imgPath,int imgsize, String site) {
 		Bitmap bitmap=null;
 		if(imgPath==null){
 			sendMsg(false,"要压缩的文件不存在");
@@ -102,7 +109,7 @@ public class CompressImageUtil {
 		newOpts.inPurgeable = true;// 同时设置才会有效
 		newOpts.inInputShareable = true;//。当系统内存不够时候图片自动被回收
 		bitmap = BitmapFactory.decodeFile(imgPath, newOpts);
-		compressImageByQuality(bitmap,imgPath,imgsize);//压缩好比例大小后再进行质量压缩
+		compressImageByQuality(bitmap,imgPath,imgsize,site);//压缩好比例大小后再进行质量压缩
 	}
 	/**
 	 * 压缩文件并检查压缩是否完成
@@ -110,7 +117,7 @@ public class CompressImageUtil {
 	 * @date 2015-1-26 下午4:58:18
 	 * @param imgPath
 	 */
-	public void compressImageByPixel(String imgPath,int imgsize,CompressListener listener) {
+	public void compressImageByPixel(String imgPath,int imgsize,String site,CompressListener listener) {
 		this.imgPath=imgPath;
 		this.listener=listener;
 		File file=new File(imgPath);
@@ -118,7 +125,7 @@ public class CompressImageUtil {
 			sendMsg(false,"要压缩的文件不存在");
 			return;
 		}
-		this.compressImageByPixel(imgPath,imgsize);
+		this.compressImageByPixel(imgPath,imgsize,site);
 	}
 
 	/**

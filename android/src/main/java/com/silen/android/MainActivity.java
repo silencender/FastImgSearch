@@ -1,18 +1,26 @@
 package com.silen.android;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,7 +31,7 @@ import com.microsoft.projectoxford.vision.contract.AnalysisResult;
 import com.microsoft.projectoxford.vision.contract.Caption;
 import com.microsoft.projectoxford.vision.rest.VisionServiceException;
 import com.silen.android.preferences.MyPreferencesActivity;
-import com.silen.takephoto.TakePhotoActivity;
+import com.silen.android.TakePhotoActivity;
 import java.io.File;
 import java.io.IOException;
 import android.os.Environment;
@@ -47,7 +55,7 @@ public class MainActivity extends TakePhotoActivity {
     private boolean weballow = false;
     private int imgsize;
     private Bundle imgdata = new Bundle();    // The button to select an image
-    private ImageButton uploadButton;
+    private ImageButton preButton;
     private ImageButton desButton;
     private EditText mEditText;
     private VisionServiceClient client;
@@ -64,11 +72,21 @@ public class MainActivity extends TakePhotoActivity {
         setTitle("Searcher");
         setContentView(R.layout.activity_main);
         mainActivity = MainActivity.this;
+        Window window = mainActivity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        ViewGroup mContentView = (ViewGroup) mainActivity.findViewById(Window.ID_ANDROID_CONTENT);
+        View mChildView = mContentView.getChildAt(0);
+        if (mChildView != null) {
+            //注意不是设置 ContentView 的 FitsSystemWindows, 而是设置 ContentView 的第一个子 View . 使其不为系统 View 预留空间.
+            ViewCompat.setFitsSystemWindows(mChildView, false);
+        }
+
         if (client==null){
             client = new VisionServiceRestClient(getString(R.string.subscription_key));
         }
 
-        uploadButton = (ImageButton) findViewById(R.id.uploadButton);
+        preButton = (ImageButton) findViewById(R.id.preButton);
         desButton = (ImageButton) findViewById(R.id.desButton);
         mEditText = (EditText)findViewById(R.id.editTextResult);
         //imgShow = (ImageView) findViewById(R.id.imgShow);
@@ -96,6 +114,10 @@ public class MainActivity extends TakePhotoActivity {
         }
 
         imgdata.putInt("imgsize",imgsize);
+        imgdata.putString("imgsite",site);
+        preButton.setBackgroundResource(R.drawable.imagename);
+
+        /*
         uploadButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,7 +147,7 @@ public class MainActivity extends TakePhotoActivity {
                 }
                 else Toast.makeText(MainActivity.mainActivity, "当前没有可用于上传的图片哦~3"+url, Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     @Override
@@ -148,6 +170,7 @@ public class MainActivity extends TakePhotoActivity {
         }
 
         imgdata.putInt("imgsize",imgsize);
+        imgdata.putString("imgsite",site);
         if(fileIsExists(url)) old_url = url;
     }
 
@@ -187,6 +210,11 @@ public class MainActivity extends TakePhotoActivity {
     public void openSettings(View view){
         Intent i = new Intent(this, MyPreferencesActivity.class);
         startActivity(i);
+    }
+
+    public void changepicurl(){
+        picurl = imgsite + picname;
+        weballow = true;
     }
 
     public void sendMessage(View view){
@@ -339,8 +367,6 @@ public class MainActivity extends TakePhotoActivity {
                 mEditText.setSelection(0);
                 */
             }
-
-            uploadButton.setEnabled(true);
         }
     }
 
@@ -355,10 +381,10 @@ public class MainActivity extends TakePhotoActivity {
     }
 
     @Override
-    public void takeSuccess(Uri uri,int imgsize) {
-        super.takeSuccess(uri,imgsize);
+    public void takeSuccess(Uri uri,int imgsize, String site) {
+        super.takeSuccess(uri,imgsize,site);
         //showImg(uri);
-        compressPic(uri.getPath(),imgsize);
+        compressPic(uri.getPath(),imgsize,site);
     }
 /*
     private void showImg(Uri uri) {

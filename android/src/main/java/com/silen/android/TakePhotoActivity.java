@@ -1,15 +1,16 @@
-package com.silen.takephoto;
+package com.silen.android;
 
-import android.support.v7.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import com.silen.takephoto.uitl.CompressImageUtil;
-import com.silen.takephoto.uitl.CompressImageUtil.CompressListener;
-import com.silen.takephoto.uitl.TakePhoto;
-import com.silen.takephoto.uitl.Utils;
+
+import com.silen.android.CompressImageUtil;
+import com.silen.android.CompressImageUtil.CompressListener;
+import com.silen.android.TakePhoto;
+import com.silen.android.Utils;
 
 /**
  * 继承这个类来让Activity获取拍照的能力<br>
@@ -36,7 +37,7 @@ public class TakePhotoActivity extends AppCompatActivity implements TakePhoto.Ta
         super.onActivityResult(requestCode,resultCode, data);
     }
     @Override
-    public void takeSuccess(Uri uri,int imgsize) {
+    public void takeSuccess(Uri uri,int imgsize, String site) {
         Log.i("info", "takeSuccess：" + uri);
     }
     @Override
@@ -62,9 +63,9 @@ public class TakePhotoActivity extends AppCompatActivity implements TakePhoto.Ta
      * 压缩照片
      * @param path 照片路径
      */
-    protected void compressPic(String path,int imgsize) {
+    protected void compressPic(String path,int imgsize, String site) {
         wailLoadDialog = Utils.showProgressDialog(TakePhotoActivity.this,"正在压缩照片...");// 提交数据
-        new CompressImageUtil().compressImageByPixel(path,imgsize,this);
+        new CompressImageUtil().compressImageByPixel(path,imgsize,site,this);
     }
     @Override
     public void onCompressSuccessed(String imgPath) {

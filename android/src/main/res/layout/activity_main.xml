@@ -7,14 +7,14 @@
     android:fitsSystemWindows="true"
     tools:context="com.silen.android.MainActivity">
 
-<!--
-    <ImageView
-        android:id="@+id/imgShow"
-        android:adjustViewBounds="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter" />
--->
+    <!--
+        <ImageView
+            android:id="@+id/imgShow"
+            android:adjustViewBounds="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter" />
+    -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,125 +25,129 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical"
-            android:weightSum="100" >
+            android:weightSum="1" >
 
+            <LinearLayout
+                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:id="@+id/headerLayout"
+                android:background="@android:color/transparent"
+                android:layout_weight="0.4"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal">
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/header"/>
+                    <ImageButton
+                        android:id="@+id/preButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_alignParentRight="true"
+                        android:onClick="openSettings"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/imagename"/>
+                </RelativeLayout>
+            </LinearLayout>
         <LinearLayout
             android:layout_height="fill_parent"
             android:layout_width="fill_parent"
             android:id="@+id/textLayout"
+            android:layout_below="@+id/headerLayout"
             android:background="@android:color/transparent"
-            android:layout_weight="35"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/header"/>
-            <EditText
-                android:id="@+id/editTextResult"
-                android:layout_height="fill_parent"
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/editTextResult"
+                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:inputType="textMultiLine"
+                    android:ems="10"
+                    android:textColor="@color/transsteelblue"
+                    android:textAlignment="center"
+                    android:background="@android:color/transparent" />
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="fill_parent"
-                android:inputType="textMultiLine"
-                android:ems="10"
-                android:textColor="@color/transsteelblue"
-                android:textAlignment="center"
-                android:background="@android:color/transparent" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:layout_below="@+id/textLayout"
-            android:background="@color/transmihh"
-            android:layout_weight="65"
-            android:weightSum="2" >
-        <LinearLayout
-        android:layout_height="80dp"
-        android:layout_width="fill_parent"
-        android:gravity = "center_horizontal"
-        android:id="@+id/ButtonLayout"
-        android:layout_weight="1"
-        android:weightSum="1.2"
-        tools:ignore="NotSibling">
-        <ImageButton
-            android:id="@+id/galleryButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:onClick="cropPic"
-            android:textSize="16sp"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/ic_picture"
-            android:layout_weight="0.4"/>
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:layout_below="@+id/textLayout"
+                android:background="@color/transmihh"
+                android:layout_weight="0.4"
+                android:weightSum="2" >
+                <LinearLayout
+                    android:layout_height="80dp"
+                    android:layout_width="fill_parent"
+                    android:gravity = "center_horizontal"
+                    android:id="@+id/ButtonLayout"
+                    android:layout_weight="1"
+                    android:weightSum="1.2"
+                    tools:ignore="NotSibling">
+                    <ImageButton
+                        android:id="@+id/galleryButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:onClick="cropPic"
+                        android:textSize="16sp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_picture"
+                        android:layout_weight="0.6"/>
 
-        <ImageButton
-            android:id="@+id/cameraButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:onClick="cropPic"
-            android:textSize="16sp"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/ic_camera"
-            android:layout_weight="0.4"/>
-
-        <ImageButton
-            android:id="@+id/uploadButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:textSize="16sp"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/ic_cloud_upload"
-            android:layout_weight="0.4"/>
-    </LinearLayout>
-    <!--
-        <Button
-            android:id="@+id/btnTakeOriginal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="cropPic"
-            android:text="从相机拍取照片不裁剪" />
-    -->
-    <LinearLayout
-        android:layout_below="@+id/ButtonLayout"
-        android:layout_height="80dp"
-        android:layout_width="fill_parent"
-        android:gravity = "center_horizontal"
-        android:layout_weight="1"
-        android:id="@+id/ButtonLayout2"
-        android:weightSum="1.2">
+                    <ImageButton
+                        android:id="@+id/cameraButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:onClick="cropPic"
+                        android:textSize="16sp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_camera"
+                        android:layout_weight="0.6"/>
+                </LinearLayout>
+                <!--
+                    <Button
+                        android:id="@+id/btnTakeOriginal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="cropPic"
+                        android:text="从相机拍取照片不裁剪" />
+                -->
+                <LinearLayout
+                    android:layout_below="@+id/ButtonLayout"
+                    android:layout_height="80dp"
+                    android:layout_width="fill_parent"
+                    android:gravity = "center_horizontal"
+                    android:layout_weight="1"
+                    android:id="@+id/ButtonLayout2"
+                    android:weightSum="1.2">
 
 
-        <ImageButton
-            android:id="@+id/desButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:onClick="doDescribe"
-            android:textSize="16sp"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/ic_pen"
-            android:layout_weight="0.4"/>
+                    <ImageButton
+                        android:id="@+id/desButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:onClick="doDescribe"
+                        android:textSize="16sp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_pen"
+                        android:layout_weight="0.6"/>
 
-        <ImageButton
-            android:id="@+id/searchButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:onClick="sendMessage"
-            android:textSize="16sp"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/ic_glass"
-            android:layout_weight="0.4"/>
-
-        <ImageButton
-            android:id="@+id/preButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:onClick="openSettings"
-            android:textSize="16sp"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/ic_settings"
-            android:layout_weight="0.4"/>
-    </LinearLayout>
-        </LinearLayout>
+                    <ImageButton
+                        android:id="@+id/searchButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:onClick="sendMessage"
+                        android:textSize="16sp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_glass"
+                        android:layout_weight="0.6"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

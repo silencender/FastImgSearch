@@ -1,8 +1,7 @@
-package com.silen.takephoto.uitl;
+package com.silen.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -10,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -53,6 +53,7 @@ public class TakePhoto {
     private TakeResultListener l;
     private Uri imageUri;
     private int imgsize;
+    private String site;
     public TakePhoto(Activity activity, TakeResultListener l) {
         this.activity = activity;
         this.l = l;
@@ -84,13 +85,13 @@ public class TakePhoto {
                 break;
             case PIC_CROP://裁剪照片
                 if (resultCode == Activity.RESULT_OK) {
-                    l.takeSuccess(imageUri,imgsize);
+                    l.takeSuccess(imageUri,imgsize,site);
                 } else if (resultCode == Activity.RESULT_CANCELED) {//裁切的照片没有保存
                     if (data != null) {
                         Bitmap bitmap = data.getParcelableExtra("data");//获取裁切的结果数据
                         //将裁切的结果写入到文件
                         writeToFile(bitmap);
-                        l.takeSuccess(imageUri,imgsize);
+                        l.takeSuccess(imageUri,imgsize,site);
                         Log.w("info", bitmap == null ? "null" : "not null");
                     } else {
                         l.takeFail("没有获取到裁剪结果");
@@ -162,6 +163,7 @@ public class TakePhoto {
         Uri uri = Uri.fromFile(new File(imgdata.getString("imgurl")));
         imageUri = uri;
         imgsize=imgdata.getInt("imgsize");
+        site = imgdata.getString("imgsite");
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         intent.putExtra("return-data", true);
@@ -201,6 +203,7 @@ public class TakePhoto {
         Uri uri = Uri.fromFile(new File(imgdata.getString("imgurl")));
         imageUri = uri;
         imgsize=imgdata.getInt("imgsize");
+        site = imgdata.getString("imgsite");
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);//设置Action为拍照
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);//将拍取的照片保存到指定URI
@@ -239,7 +242,7 @@ public class TakePhoto {
         String release= Build.VERSION.RELEASE;
         int sdk= Build.VERSION.SDK_INT;
         Log.i("ksdinf","release:"+release+"sdk:"+sdk);
-        String manufacturer = android.os.Build.MANUFACTURER;
+        String manufacturer = Build.MANUFACTURER;
         if (!TextUtils.isEmpty(manufacturer)) {
             if (manufacturer.toLowerCase().contains("lenovo")) {//对于联想的手机返回数据
                 return true;
@@ -267,7 +270,7 @@ public class TakePhoto {
             fos.write(bos.toByteArray());
             bos.flush();
             fos.flush();
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             if (fos != null) try {
@@ -289,7 +292,7 @@ public class TakePhoto {
      * 拍照结果监听接口
      */
     public interface TakeResultListener {
-        void takeSuccess(Uri uri,int imgsize);
+        void takeSuccess(Uri uri, int imgsize, String site);
 
         void takeFail(String msg);
 

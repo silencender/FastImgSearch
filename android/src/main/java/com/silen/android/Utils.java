@@ -1,4 +1,4 @@
-package com.silen.takephoto.uitl;
+package com.silen.android;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
