@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="Settings">
+    <PreferenceCategory android:title="Customize">
     <EditTextPreference
-        android:title="Picture Size"
+        android:title="Compress Size"
         android:key="size"
         android:defaultValue="100"
         android:numeric="integer"
-        android:summary="Enter the picture size to compress to (50-500KB)"></EditTextPreference>
-    <ListPreference     android:title="Search Engine"
-        android:summary="Select the search engine you would like to use"
+        ></EditTextPreference>
+    <ListPreference     android:title="Default Search Engine"
         android:key="selectEngine"
         android:defaultValue="1"
         android:entries="@array/searchArray"
         android:entryValues="@array/searchValues" />
-    <ListPreference     android:title="Image Server"
-        android:summary="Select the faster image server"
+    <ListPreference     android:title="Cloud Server"
         android:key="selectServer"
         android:defaultValue="1"
         android:entries="@array/uploadArray"
         android:entryValues="@array/uploadValues" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Normal">
     <Preference android:title="Clear Cache"
         android:key="clearCache" />
+    </PreferenceCategory>
 </PreferenceScreen>

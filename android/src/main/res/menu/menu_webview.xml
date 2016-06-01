@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".Webview">
+    <item android:id="@+id/action_engine" android:title="@string/action_engine"
+        android:orderInCategory="98" app:showAsAction="never" />
+    <item android:id="@+id/action_clearwebcache" android:title="@string/action_clearcache"
+        android:orderInCategory="99" app:showAsAction="never" />
+</menu>

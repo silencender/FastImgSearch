@@ -4,6 +4,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_engine">Change Engine</string>
     <string name="action_clearcache">Clear Cache</string>
     <string name="title_activity_webview">Webview</string>
     <string name="LAsite">http://android.silenceender.com/upload.php</string>

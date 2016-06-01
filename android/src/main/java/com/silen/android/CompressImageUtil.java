@@ -4,9 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
-import android.view.View;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,50 +27,55 @@ public class CompressImageUtil {
 	 * @param imgPath 图片的保存路径
 	 * @date 2014-12-5下午11:30:43
 	 */
-	private void compressImageByQuality(final Bitmap bitmap,final String imgPath,final int imgsize,final String site){
-		if(bitmap==null){
-			sendMsg(false,"像素压缩失败");
+	private void compressImageByQuality(final Bitmap bitmap,final String imgPath,final int imgsize,final String site) {
+		if (bitmap == null) {
+			sendMsg(false, "像素压缩失败");
 			return;
 		}
 		new Thread(new Runnable() {//开启多线程进行压缩处理
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				int options = 100;
-                int size = 100;
-				if(imgsize<50) size = 50;
-                else if(imgsize > 500) size = 500;
-                else size = imgsize;
-				bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);//质量压缩方法，把压缩后的数据存放到baos中 (100表示不压缩，0表示压缩到最小)
-				while (baos.toByteArray().length / 1024 >size) {//循环判断如果压缩后图片是否大于100KB,大于继续压缩
-					baos.reset();//重置baos即让下一次的写入覆盖之前的内容 
-					options -= 5;//图片质量每次减少10
-					if(options<0)options=0;//如果图片质量小于0，则将图片的质量压缩到最小值
-					bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);//将压缩后的图片保存到baos中
-					if(options==0)break;//如果图片的质量已降到最低则，不再进行压缩
-				}
+			Handler myHandler = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					super.handleMessage(msg);
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					int options = 100;
+					int size = 100;
+					if (imgsize < 50) size = 50;
+					else if (imgsize > 500) size = 500;
+					else size = imgsize;
+					bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);//质量压缩方法，把压缩后的数据存放到baos中 (100表示不压缩，0表示压缩到最小)
+					while (baos.toByteArray().length / 1024 > size) {//循环判断如果压缩后图片是否大于100KB,大于继续压缩
+						baos.reset();//重置baos即让下一次的写入覆盖之前的内容
+						options -= 5;//图片质量每次减少10
+						if (options < 0) options = 0;//如果图片质量小于0，则将图片的质量压缩到最小值
+						bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);//将压缩后的图片保存到baos中
+						if (options == 0) break;//如果图片的质量已降到最低则，不再进行压缩
+					}
 //				if(bitmap!=null&&!bitmap.isRecycled()){
 //					bitmap.recycle();//回收内存中的图片
 //				}
-				try {
-					FileOutputStream fos = new FileOutputStream(new File(imgPath));//将压缩后的图片保存的本地上指定路径中
-					fos.write(baos.toByteArray());
-					fos.flush();
-					fos.close();
-					sendMsg(true, imgPath);
-				} catch (Exception e) {
-					sendMsg(false,"质量压缩失败");
-					e.printStackTrace();
+					try {
+						FileOutputStream fos = new FileOutputStream(new File(imgPath));//将压缩后的图片保存的本地上指定路径中
+						fos.write(baos.toByteArray());
+						fos.flush();
+						fos.close();
+						sendMsg(true, imgPath);
+					} catch (Exception e) {
+						sendMsg(false, "质量压缩失败");
+						e.printStackTrace();
+					} finally {
+						//File img = new File(imgPath);
+						FileUploadTask fileuploadtask = new FileUploadTask();
+						String[] datas = {imgPath, site};
+						fileuploadtask.execute(datas);
+						MainActivity.mainActivity.changepicurl();
+					}
 				}
-				finally {
-					    Looper.prepare();
-						File img = new File(imgPath);
-					    FileUploadTask fileuploadtask = new FileUploadTask();
-					    String[] datas = {imgPath, site};
-					    fileuploadtask.execute(datas);
-					    MainActivity.mainActivity.changepicurl();
-				}
+			};
+			@Override
+			public void run() {
+				Message msg = new Message();
+				myHandler.sendMessage(msg);
 			}
 		}).start();
 	}

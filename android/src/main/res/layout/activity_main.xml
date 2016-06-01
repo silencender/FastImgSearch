@@ -63,15 +63,6 @@
             android:background="@android:color/transparent"
             android:layout_weight="0.2"
             android:orientation="horizontal">
-                <EditText
-                    android:id="@+id/editTextResult"
-                    android:layout_height="fill_parent"
-                    android:layout_width="fill_parent"
-                    android:inputType="textMultiLine"
-                    android:ems="10"
-                    android:textColor="@color/transsteelblue"
-                    android:textAlignment="center"
-                    android:background="@android:color/transparent" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -96,7 +87,7 @@
                         android:onClick="cropPic"
                         android:textSize="16sp"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/ic_picture"
+                        android:src="@drawable/picture"
                         android:layout_weight="0.6"/>
 
                     <ImageButton
@@ -106,7 +97,7 @@
                         android:onClick="cropPic"
                         android:textSize="16sp"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/ic_camera"
+                        android:src="@drawable/camera"
                         android:layout_weight="0.6"/>
                 </LinearLayout>
                 <!--
@@ -131,20 +122,20 @@
                         android:id="@+id/desButton"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:onClick="doDescribe"
+                        android:onClick="opendescribe"
                         android:textSize="16sp"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/ic_pen"
+                        android:src="@drawable/pen"
                         android:layout_weight="0.6"/>
 
                     <ImageButton
                         android:id="@+id/searchButton"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:onClick="sendMessage"
+                        android:onClick="openwebview"
                         android:textSize="16sp"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/ic_glass"
+                        android:src="@drawable/glass"
                         android:layout_weight="0.6"/>
                 </LinearLayout>
             </LinearLayout>

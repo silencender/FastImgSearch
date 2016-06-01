@@ -1,11 +1,11 @@
 package com.silen.android.preferences;
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.silen.android.MainActivity;
@@ -16,11 +16,24 @@ import java.io.File;
 /**
  * Created by Silen on 4/26/2016.
  */
-public class MyPreferencesActivity extends PreferenceActivity {
+public class MyPreferencesActivity extends PreferenceActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActionBar ac = getActionBar();
+        ac.setDisplayHomeAsUpEnabled(true);
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment

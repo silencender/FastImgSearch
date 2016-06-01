@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:minHeight="200dp"
+    android:minWidth="200dp"
+    android:background="@color/steelblue"
+    tools:context="com.silen.android.Describe">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/repeat_bg">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal"
+                android:layout_weight="0.7"
+                android:layout_marginTop="20dp"
+                android:weightSum="100">
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="45"></LinearLayout>
+            <ImageView
+                android:id="@+id/imgShow"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="10"/>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="45"></LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1.3"
+                android:layout_marginTop="6dp"
+                android:weightSum="100">
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="45"></LinearLayout>
+            <EditText
+                android:id="@+id/editTextResult"
+                android:layout_below="@+id/showImage"
+                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:inputType="textMultiLine"
+                android:textSize="16sp"
+                android:fontFamily="casual"
+                android:textColor="@color/slategray"
+                android:layout_weight="10"
+                android:background="@android:color/transparent" />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="45"></LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -1,43 +1,24 @@
 package com.silen.android;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.net.Uri;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Build;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import com.google.gson.Gson;
-import com.microsoft.projectoxford.vision.VisionServiceClient;
-import com.microsoft.projectoxford.vision.VisionServiceRestClient;
-import com.microsoft.projectoxford.vision.contract.AnalysisResult;
-import com.microsoft.projectoxford.vision.contract.Caption;
-import com.microsoft.projectoxford.vision.rest.VisionServiceException;
-import com.silen.android.preferences.MyPreferencesActivity;
-import com.silen.android.TakePhotoActivity;
-import java.io.File;
-import java.io.IOException;
-import android.os.Environment;
-import android.view.View.OnClickListener;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.silen.android.preferences.MyPreferencesActivity;
+
+import java.io.File;
 
 
 /**
@@ -47,9 +28,9 @@ import android.widget.Toast;
  * @Date:2016.4.28
  */
 public class MainActivity extends TakePhotoActivity {
-    private ImageView imgShow;
     private String old_url = null;
     private String url = null;
+    private String puturl = null;
     private String picname = null;
     private String picurl = null;
     private boolean weballow = false;
@@ -57,8 +38,6 @@ public class MainActivity extends TakePhotoActivity {
     private Bundle imgdata = new Bundle();    // The button to select an image
     private ImageButton preButton;
     private ImageButton desButton;
-    private EditText mEditText;
-    private VisionServiceClient client;
     private SharedPreferences SP;
     private String searchEngine;
     private String site;
@@ -82,17 +61,9 @@ public class MainActivity extends TakePhotoActivity {
             ViewCompat.setFitsSystemWindows(mChildView, false);
         }
 
-        if (client==null){
-            client = new VisionServiceRestClient(getString(R.string.subscription_key));
-        }
-
         preButton = (ImageButton) findViewById(R.id.preButton);
         desButton = (ImageButton) findViewById(R.id.desButton);
-        mEditText = (EditText)findViewById(R.id.editTextResult);
-        //imgShow = (ImageView) findViewById(R.id.imgShow);
-        mEditText.setText("");
-        mEditText.setKeyListener(null);
-        mEditText.setTypeface(Typeface.SERIF);
+
         File destDir = new File(sDir);
         if (!destDir.exists()) {
             destDir.mkdirs();
@@ -117,37 +88,17 @@ public class MainActivity extends TakePhotoActivity {
         imgdata.putString("imgsite",site);
         preButton.setBackgroundResource(R.drawable.imagename);
 
-        /*
-        uploadButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                imgsize = Integer.parseInt(SP.getString("size","150"));
-                if(fileIsExists(url)) {
-                    File img = new File(url);
-                    if(img.length()/1024<imgsize*1.5){
-                        FileUploadTask fileuploadtask = new FileUploadTask();
-                        String[] datas = {url, site};
-                        fileuploadtask.execute(datas);
-                        picurl = imgsite+picname;
-                        weballow = true;
-                    }
-                    else Toast.makeText(MainActivity.mainActivity, "当前没有可用于上传的图片哦~1", Toast.LENGTH_SHORT).show();
-                }
-                else if(old_url != null)  {
-                    File old_img = new File(old_url);
-                    if(old_img.length()/1024<imgsize*1.5){
-                        FileUploadTask fileuploadtask = new FileUploadTask();
-                        String[] datas = {old_url, site};
-                        fileuploadtask.execute(datas);
-                        picurl = imgsite+old_url.substring(old_url.length()-17,old_url.length());
-                        weballow = true;
-                    }
-                    else Toast.makeText(MainActivity.mainActivity, "当前没有可用于上传的图片哦~2", Toast.LENGTH_SHORT).show();
-                }
-                else Toast.makeText(MainActivity.mainActivity, "当前没有可用于上传的图片哦~3"+url, Toast.LENGTH_SHORT).show();
+        Intent intent = getIntent();
+
+        try{
+            if (intent.getType().indexOf("image/") != -1) {
+                Uri data = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                setUri();
+                imgdata.putString("imgurl", url);
+                getTakePhoto().picCrop(imgdata, data);
             }
-        });*/
+        }
+        catch (Exception e){}
     }
 
     @Override
@@ -155,7 +106,6 @@ public class MainActivity extends TakePhotoActivity {
         super.onResume();
         desButton.setEnabled(true);
         imgsize = Integer.parseInt(SP.getString("size","150"));
-        mEditText.setText("");
 
         if(Integer.parseInt(SP.getString("selectEngine","1")) == 1) searchEngine = getString(R.string.googleEngine);
         else if(Integer.parseInt(SP.getString("selectEngine","1")) == 2) searchEngine = getString(R.string.baiduEngine);
@@ -214,52 +164,51 @@ public class MainActivity extends TakePhotoActivity {
 
     public void changepicurl(){
         picurl = imgsite + picname;
+        puturl = url;
         weballow = true;
     }
 
-    public void sendMessage(View view){
-        if(weballow) weburl=searchEngine+picurl;
-        if(weburl != null) {
+    public void openwebview(View view){
+        if(weballow) {
             Intent intent = new Intent(MainActivity.this, Webview.class);
-            intent.putExtra("url", weburl);
+            Bundle data = new Bundle();
+            data.putString("searchEngine", searchEngine);
+            data.putString("picurl", picurl);
+            intent.putExtra("data",data);
             startActivity(intent);
         }
         else Toast.makeText(MainActivity.mainActivity, "请先上传图像~", Toast.LENGTH_SHORT).show();
         }
+
+    public void opendescribe(View view){
+        if(weballow) weburl=searchEngine+picurl;
+        if(weburl != null) {
+            Intent intent = new Intent(MainActivity.this, Describe.class);
+            intent.putExtra("weburl", weburl);
+            intent.putExtra("picurl", picurl);
+            intent.putExtra("url", puturl);
+            startActivity(intent);
+        }
+        else Toast.makeText(MainActivity.mainActivity, "请先上传图像~", Toast.LENGTH_SHORT).show();
+    }
 
     public boolean fileIsExists(String strFile)
     {
         try
         {
             File f=new File(strFile);
-            if(!f.exists())
+            if(f==null||!f.exists()||!f.isFile())
             {
                 return false;
             }
-
         }
         catch (Exception e)
         {
             return false;
         }
-
         return true;
     }
-    /*
-            ProgressDialog dialog = new ProgressDialog(MainActivity.mainActivity);
-            dialog.setMessage(storeurl);
-            dialog.setIndeterminate(false);
-            dialog.show();
-*/
-/*
-    public static int getResponseCode(String urlString) throws IOException {
-        URL u = new URL(urlString);
-        HttpURLConnection web =  (HttpURLConnection)  u.openConnection();
-        web.setRequestMethod("HEAD");
-        web.connect();
-        return web.getResponseCode();
-    }
-*/
+
     public void setUri(){
         picname = System.currentTimeMillis() + ".jpg";
         url=sDir+picname;
@@ -287,88 +236,6 @@ public class MainActivity extends TakePhotoActivity {
         }
     }
 
-    private String process() throws VisionServiceException, IOException {
-        Gson gson = new Gson();
-
-        // Put the image into an input stream for detection.
-        AnalysisResult v = this.client.describe(picurl, 1);
-
-        String result = gson.toJson(v);
-        Log.d("result", result);
-
-        return result;
-    }
-
-    public void doDescribe(View view) {
-        desButton.setEnabled(false);
-        mEditText.setText("Please wait a moment, I'm thinking...");
-
-        try {
-            new doRequest().execute();
-        } catch (Exception e)
-        {
-            mEditText.setText("Error encountered. Exception is: " + e.toString());
-        }
-    }
-
-    public class doRequest extends AsyncTask<String, String, String> {
-        // Store error message
-        private Exception e = null;
-
-        public doRequest() {
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-            try {
-                return process();
-            } catch (Exception e) {
-                this.e = e;    // Store error
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String data) {
-            super.onPostExecute(data);
-            // Display based on error existence
-
-            mEditText.setText("");
-            if (e != null) {
-                //mEditText.setText("Error: " + e.getMessage());
-                mEditText.setText("Oops! Maybe the image is not yet uploaded, or the Internet connection needs to be reset :-)");
-                this.e = null;
-            } else {
-                Gson gson = new Gson();
-                AnalysisResult result = gson.fromJson(data, AnalysisResult.class);
-
-                //mEditText.append("Image format: " + result.metadata.format + "\n");
-                //mEditText.append("Image width: " + result.metadata.width + ", height:" + result.metadata.height + "\n");
-                //mEditText.append("\n");
-
-                for (Caption caption: result.description.captions) {
-                    //mEditText.append("Caption: " + caption.text + ", confidence: " + caption.confidence + "\n");
-                    //mEditText.append(caption.text + ".\nConfidence: " + Math.round(caption.confidence*1000)/10.0 + "%\n");
-                    if(caption.confidence>0.7) mEditText.append("I'm sure that it is "+caption.text +"! :-)\n");
-                    else if(caption.confidence>0.3) mEditText.append("I'm not very sure, but is it "+caption.text +"?\n");
-                    else mEditText.append("So hard to recognize this picture:-( But it looks like "+caption.text +".\n");
-                }
-                mEditText.append("\nAnd I found following keywords related to this picture: ");
-
-                for (String tag: result.description.tags) {
-                    mEditText.append(tag + "; ");
-                }
-                /*
-                mEditText.append("\n");
-
-                mEditText.append("\n--- Raw Data ---\n\n");
-                mEditText.append(data);
-                mEditText.setSelection(0);
-                */
-            }
-        }
-    }
 
     @Override
     public void takeCancel() {
@@ -386,12 +253,4 @@ public class MainActivity extends TakePhotoActivity {
         //showImg(uri);
         compressPic(uri.getPath(),imgsize,site);
     }
-/*
-    private void showImg(Uri uri) {
-        BitmapFactory.Options option = new BitmapFactory.Options();
-        option.inSampleSize = 2;
-        Bitmap bitmap = BitmapFactory.decodeFile(uri.getPath(), option);
-        imgShow.setImageBitmap(bitmap);
-    }
-    */
 }

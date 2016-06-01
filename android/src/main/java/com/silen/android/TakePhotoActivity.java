@@ -7,10 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.silen.android.CompressImageUtil;
 import com.silen.android.CompressImageUtil.CompressListener;
-import com.silen.android.TakePhoto;
-import com.silen.android.Utils;
 
 /**
  * 继承这个类来让Activity获取拍照的能力<br>

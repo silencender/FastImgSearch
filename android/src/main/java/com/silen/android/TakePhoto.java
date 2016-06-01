@@ -29,18 +29,12 @@ public class TakePhoto {
      * request Code 从相册选择照片并裁切
      **/
     public final static int PIC_SELECT_CROP = 123;
-    /**
-     * request Code 从相册选择照片不裁切
-     **/
-    public final static int PIC_SELECT_ORIGINAL = 126;
+
     /**
      * request Code 拍取照片并裁切
      **/
     public final static int PIC_TAKE_CROP = 124;
-    /**
-     * request Code 拍取照片不裁切
-     **/
-    public final static int PIC_TAKE_ORIGINAL = 127;
+
     /**
      * request Code 裁切照片
      **/
@@ -106,43 +100,6 @@ public class TakePhoto {
     }
 
     /**
-     * 从相册选择原生的照片（不裁切）
-     */
- /*
-    public void picSelectOriginal(Uri uri) {
-        imageUri = uri;
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_PICK);//Pick an item from the data
-        intent.setType("image/*");//从所有图片中进行选择
-        activity.startActivityForResult(intent, PIC_SELECT_ORIGINAL);
-    }
-*/
-//    /**
-//     * 从相册选择照片进行裁剪
-//     *
-//     * @param uri    图片保存的路径
-//     * @param with   裁切的宽度
-//     * @param height 裁切的高度
-//     */
-
-//    public void picSelectCrop(Uri uri, int with, int height) {
-//        imageUri = uri;
-//        Intent intent = new Intent(Intent.ACTION_PICK);
-//        intent.setDataAndType(imageUri, "image/*");
-//        intent.putExtra("crop", "true");//设置为裁切
-//        intent.putExtra("aspectX", 2);//裁切的宽比例
-//        intent.putExtra("aspectY", 1);//裁切的高比例
-//        intent.putExtra("outputX", with);//裁切的宽度
-//        intent.putExtra("outputY", height);//裁切的高度
-//        intent.putExtra("scale", true);//支持缩放
-//        intent.putExtra("return-data", false);
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);//将裁切的结果输出到指定的Uri
-//        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());//裁切成的图片的格式
-//        intent.putExtra("noFaceDetection", true); // no face detection
-//        activity.startActivityForResult(intent, PIC_SELECT_CROP);
-//    }
-
-    /**
      * 从相册选择照片进行裁剪
      *
      * @param imgdata 图片保存的路径和裁剪大小
@@ -168,6 +125,20 @@ public class TakePhoto {
         intent.setType("image/*");
         intent.putExtra("return-data", true);
         activity.startActivityForResult(intent, PIC_SELECT_CROP);
+    }
+
+    public void picCrop(Bundle imgdata,Uri data) {
+        picCrop(imgdata,data,outputX,outputY);
+    }
+
+    public void picCrop(Bundle imgdata,Uri data,int cropWidth,int cropHeight) {
+        this.cropWidth=cropWidth;
+        this.cropHeight=cropHeight;
+        Uri uri = Uri.fromFile(new File(imgdata.getString("imgurl")));
+        imageUri = uri;
+        imgsize=imgdata.getInt("imgsize");
+        site = imgdata.getString("imgsite");
+        cropImageUri(data, PIC_CROP);
     }
 
     /**
