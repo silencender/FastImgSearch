@@ -45,7 +45,6 @@ public class ProgressBarWebView extends WebView {
        @Override
        public boolean shouldOverrideUrlLoading(WebView view, String url) {
            _this.getSettings().setJavaScriptEnabled(true);
-           _this.getSettings().setUserAgentString("Android");
            _this.loadUrl(url);
            return true;
        }
