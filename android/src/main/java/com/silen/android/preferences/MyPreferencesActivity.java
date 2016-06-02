@@ -1,5 +1,6 @@
 package com.silen.android.preferences;
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
@@ -10,18 +11,16 @@ import android.widget.Toast;
 
 import com.silen.android.MainActivity;
 import com.silen.android.R;
+import com.silen.android.Webview;
 
 import java.io.File;
 
-/**
- * Created by Silen on 4/26/2016.
- */
 public class MyPreferencesActivity extends PreferenceActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActionBar ac = getActionBar();
-        ac.setDisplayHomeAsUpEnabled(true);
+        ac.setDisplayHomeAsUpEnabled(true);  //激活返回键
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
     }
 
@@ -43,8 +42,8 @@ public class MyPreferencesActivity extends PreferenceActivity{
         {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
-            Preference button = (Preference)findPreference("clearCache");
-            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            Preference cachebutton = (Preference)findPreference("clearCache");
+            cachebutton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     String sDir = Environment.getExternalStorageDirectory().getPath() + "/FastImgSearch/temp/";

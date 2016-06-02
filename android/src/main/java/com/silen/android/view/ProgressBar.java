@@ -9,9 +9,6 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
-/**
- * Created by Administrator on 15-6-18.
- */
 public class ProgressBar extends View {
     private int progress = 1;
     private final static int HEIGHT = 4;

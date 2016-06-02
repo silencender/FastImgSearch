@@ -9,19 +9,9 @@ import android.util.Log;
 
 import com.silen.android.CompressImageUtil.CompressListener;
 
-/**
- * 继承这个类来让Activity获取拍照的能力<br>
- *
- * @author JPH
- * @Date:2015.08.05
- */
 public class TakePhotoActivity extends AppCompatActivity implements TakePhoto.TakeResultListener,CompressListener {
     private TakePhoto takePhoto;
     protected ProgressDialog wailLoadDialog;
-    /**
-     *  获取TakePhoto实例
-     * @return
-     */
     protected TakePhoto getTakePhoto(){
         if (takePhoto==null){
             takePhoto=new TakePhoto(this,this);
@@ -56,10 +46,7 @@ public class TakePhotoActivity extends AppCompatActivity implements TakePhoto.Ta
         getTakePhoto().setImageUri((Uri)savedInstanceState.getParcelable("imageUri"));
         super.onRestoreInstanceState(savedInstanceState);
     }
-    /**
-     * 压缩照片
-     * @param path 照片路径
-     */
+
     protected void compressPic(String path,int imgsize, String site) {
         wailLoadDialog = Utils.showProgressDialog(TakePhotoActivity.this,"正在压缩照片...");// 提交数据
         new CompressImageUtil().compressImageByPixel(path,imgsize,site,this);

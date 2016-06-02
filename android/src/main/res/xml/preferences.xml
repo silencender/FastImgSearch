@@ -3,7 +3,7 @@
     android:title="Settings">
     <PreferenceCategory android:title="Customize">
     <EditTextPreference
-        android:title="Compress Size"
+        android:title="Compress Size(KB)"
         android:key="size"
         android:defaultValue="100"
         android:numeric="integer"

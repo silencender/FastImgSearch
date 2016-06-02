@@ -9,9 +9,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-/**
- * Created by yunye on 15-6-18.
- */
+
 public class ProgressBarWebView extends WebView {
     private ProgressBar progressBar;
     private Handler handler;
@@ -47,6 +45,7 @@ public class ProgressBarWebView extends WebView {
        @Override
        public boolean shouldOverrideUrlLoading(WebView view, String url) {
            _this.getSettings().setJavaScriptEnabled(true);
+           _this.getSettings().setUserAgentString("Android");
            _this.loadUrl(url);
            return true;
        }

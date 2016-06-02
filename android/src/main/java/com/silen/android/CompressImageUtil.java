@@ -10,23 +10,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
-/**
- * 压缩照片2.0
- * @author JPH
- * @date 2015-08-26 下午1:44:26
- */
+
 public class CompressImageUtil {
 	//压缩文件的路径
 	private String imgPath;
 	//压缩结果监听器
 	private CompressListener listener;
-	/**
-	 * 多线程压缩图片的质量
-	 * @author JPH
-	 * @param bitmap 内存中的图片
-	 * @param imgPath 图片的保存路径
-	 * @date 2014-12-5下午11:30:43
-	 */
+
 	private void compressImageByQuality(final Bitmap bitmap,final String imgPath,final int imgsize,final String site) {
 		if (bitmap == null) {
 			sendMsg(false, "像素压缩失败");
@@ -60,15 +50,14 @@ public class CompressImageUtil {
 						fos.flush();
 						fos.close();
 						sendMsg(true, imgPath);
-					} catch (Exception e) {
-						sendMsg(false, "质量压缩失败");
-						e.printStackTrace();
-					} finally {
-						//File img = new File(imgPath);
+						//上传图片
 						FileUploadTask fileuploadtask = new FileUploadTask();
 						String[] datas = {imgPath, site};
 						fileuploadtask.execute(datas);
 						MainActivity.mainActivity.changepicurl();
+					} catch (Exception e) {
+						sendMsg(false, "质量压缩失败");
+						e.printStackTrace();
 					}
 				}
 			};
@@ -79,13 +68,7 @@ public class CompressImageUtil {
 			}
 		}).start();
 	}
-	/**
-	 * 按比例缩小图片的像素以达到压缩的目的
-	 * @author JPH
-	 * @param imgPath
-	 * @return 
-	 * @date 2014-12-5下午11:30:59
-	 */
+
 	private void compressImageByPixel(String imgPath,int imgsize, String site) {
 		Bitmap bitmap=null;
 		if(imgPath==null){
@@ -114,12 +97,7 @@ public class CompressImageUtil {
 		bitmap = BitmapFactory.decodeFile(imgPath, newOpts);
 		compressImageByQuality(bitmap,imgPath,imgsize,site);//压缩好比例大小后再进行质量压缩
 	}
-	/**
-	 * 压缩文件并检查压缩是否完成
-	 * @author JPH
-	 * @date 2015-1-26 下午4:58:18
-	 * @param imgPath
-	 */
+
 	public void compressImageByPixel(String imgPath,int imgsize,String site,CompressListener listener) {
 		this.imgPath=imgPath;
 		this.listener=listener;
@@ -131,11 +109,6 @@ public class CompressImageUtil {
 		this.compressImageByPixel(imgPath,imgsize,site);
 	}
 
-	/**
-	 * 发送压缩结果的消息
-	 * @param isSuccess 压缩是否成功
-	 * @param obj
-	 */
 	private void sendMsg(boolean isSuccess,String obj){
 		Message msg=new Message();
 		msg.obj=obj;

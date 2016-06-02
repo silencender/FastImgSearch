@@ -21,10 +21,6 @@
         <item name="colorAccent">@color/steelblue</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
     <style name="AppTheme.Settings" parent="@android:style/Theme.Material.Light" >
     <item name="android:colorPrimary">@color/mihhh</item>
     <item name="android:colorPrimaryDark">@color/mihhh</item>

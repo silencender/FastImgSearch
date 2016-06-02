@@ -20,13 +20,6 @@ import com.silen.android.preferences.MyPreferencesActivity;
 
 import java.io.File;
 
-
-/**
- * 从相册选择照片进行裁剪，从相机拍取照片进行裁剪<br>
- * 上传图片到服务器，进行描述与相关查询
- * @author JPH Silen
- * @Date:2016.4.28
- */
 public class MainActivity extends TakePhotoActivity {
     private String old_url = null;
     private String url = null;
@@ -36,8 +29,6 @@ public class MainActivity extends TakePhotoActivity {
     private boolean weballow = false;
     private int imgsize;
     private Bundle imgdata = new Bundle();    // The button to select an image
-    private ImageButton preButton;
-    private ImageButton desButton;
     private SharedPreferences SP;
     private String searchEngine;
     private String site;
@@ -48,9 +39,9 @@ public class MainActivity extends TakePhotoActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Searcher");
         setContentView(R.layout.activity_main);
         mainActivity = MainActivity.this;
+        //状态栏透明
         Window window = mainActivity.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -60,36 +51,16 @@ public class MainActivity extends TakePhotoActivity {
             //注意不是设置 ContentView 的 FitsSystemWindows, 而是设置 ContentView 的第一个子 View . 使其不为系统 View 预留空间.
             ViewCompat.setFitsSystemWindows(mChildView, false);
         }
-
-        preButton = (ImageButton) findViewById(R.id.preButton);
-        desButton = (ImageButton) findViewById(R.id.desButton);
-
+        //创建图片目录
         File destDir = new File(sDir);
         if (!destDir.exists()) {
             destDir.mkdirs();
         }
-
+        //获取偏好设置
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        imgsize = Integer.parseInt(SP.getString("size","100"));
-
-        if(Integer.parseInt(SP.getString("selectEngine","1")) == 1) searchEngine = getString(R.string.googleEngine);
-        else if(Integer.parseInt(SP.getString("selectEngine","1")) == 2) searchEngine = getString(R.string.baiduEngine);
-
-        if(Integer.parseInt(SP.getString("selectServer","1")) == 1){
-            site = getString(R.string.shanghaisite);
-            imgsite = getString(R.string.shanghaiimgsite);
-        }
-        else if(Integer.parseInt(SP.getString("selectServer","1")) == 2){
-            site = getString(R.string.LAsite);
-            imgsite = getString(R.string.LAimgsite);
-        }
-
-        imgdata.putInt("imgsize",imgsize);
-        imgdata.putString("imgsite",site);
-        preButton.setBackgroundResource(R.drawable.imagename);
-
+        getPreference();
+        //接收隐式intent并交由picCrop处理
         Intent intent = getIntent();
-
         try{
             if (intent.getType().indexOf("image/") != -1) {
                 Uri data = intent.getParcelableExtra(Intent.EXTRA_STREAM);
@@ -104,12 +75,14 @@ public class MainActivity extends TakePhotoActivity {
     @Override
     public void onResume(){
         super.onResume();
-        desButton.setEnabled(true);
-        imgsize = Integer.parseInt(SP.getString("size","150"));
+        getPreference();
+        if(fileIsExists(url)) old_url = url;
+    }
 
+    private void getPreference(){
+        imgsize = Integer.parseInt(SP.getString("size","100"));
         if(Integer.parseInt(SP.getString("selectEngine","1")) == 1) searchEngine = getString(R.string.googleEngine);
         else if(Integer.parseInt(SP.getString("selectEngine","1")) == 2) searchEngine = getString(R.string.baiduEngine);
-
         if(Integer.parseInt(SP.getString("selectServer","1")) == 1){
             site = getString(R.string.shanghaisite);
             imgsite = getString(R.string.shanghaiimgsite);
@@ -121,40 +94,6 @@ public class MainActivity extends TakePhotoActivity {
 
         imgdata.putInt("imgsize",imgsize);
         imgdata.putString("imgsite",site);
-        if(fileIsExists(url)) old_url = url;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent i = new Intent(this, MyPreferencesActivity.class);
-            startActivity(i);
-        }
-
-        if (id == R.id.action_clearcache) {
-            File temp = new File(sDir);
-            File[] tempfiles = temp.listFiles();
-            if(tempfiles.length != 0){
-                for(int i = 0; i<tempfiles.length; i++) tempfiles[i].delete();
-                Toast.makeText(MainActivity.mainActivity, "缓存清除完毕！", Toast.LENGTH_SHORT).show();
-            }
-            else Toast.makeText(MainActivity.mainActivity, "无缓存文件哦~", Toast.LENGTH_SHORT).show();
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void openSettings(View view){
@@ -192,12 +131,12 @@ public class MainActivity extends TakePhotoActivity {
         else Toast.makeText(MainActivity.mainActivity, "请先上传图像~", Toast.LENGTH_SHORT).show();
     }
 
-    public boolean fileIsExists(String strFile)
+    private boolean fileIsExists(String strFile)
     {
         try
         {
             File f=new File(strFile);
-            if(f==null||!f.exists()||!f.isFile())
+            if(f == null||!f.exists()||!f.isFile())
             {
                 return false;
             }
@@ -209,7 +148,7 @@ public class MainActivity extends TakePhotoActivity {
         return true;
     }
 
-    public void setUri(){
+    private void setUri(){
         picname = System.currentTimeMillis() + ".jpg";
         url=sDir+picname;
     }

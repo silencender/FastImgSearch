@@ -14,10 +14,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -36,7 +34,6 @@ public class Describe extends Activity {
     private EditText mEditText;
     private String picurl = null;
     private VisionServiceClient client;
-    private View rootView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,31 +49,6 @@ public class Describe extends Activity {
         catch (Exception e){}
         this.getWindow().setAttributes(params);
 
-        /*
-        Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        ViewGroup mContentView = (ViewGroup) this.findViewById(Window.ID_ANDROID_CONTENT);
-        View mChildView = mContentView.getChildAt(0);
-        if (mChildView != null) {
-            //注意不是设置 ContentView 的 FitsSystemWindows, 而是设置 ContentView 的第一个子 View . 使其不为系统 View 预留空间.
-            ViewCompat.setFitsSystemWindows(mChildView, false);
-        }
-        */
-        /*
-        rootView = findViewById(R.id.root);
-
-        if (savedInstanceState == null) {
-            rootView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    rootView.getViewTreeObserver().removeOnPreDrawListener(this);
-                    startRootAnimation();
-                    return true;
-                }
-            });
-        }
-        */
         Intent intent = getIntent();
         String weburl = intent.getStringExtra("weburl");
         picurl = intent.getStringExtra("picurl");
@@ -92,25 +64,12 @@ public class Describe extends Activity {
         doDescribe();
     }
 
-    private void startRootAnimation() {
-        rootView.setScaleY(0.1f);
-        rootView.setScaleX(0.1f);
-        rootView.setPivotY(rootView.getY() + rootView.getHeight() / 2);
-        rootView.setPivotX(rootView.getX() + rootView.getWidth() / 2);
-
-        rootView.animate()
-                .scaleX(1)
-                .scaleY(1)
-                .setDuration(200)
-                .setInterpolator(new AccelerateInterpolator())
-                .start();
-    }
 
     private void showImg(String url){
         BitmapFactory.Options option=new BitmapFactory.Options();
         option.inSampleSize=2;
         Bitmap bitmap=BitmapFactory.decodeFile(url,option);
-        Bitmap b = null;
+        Bitmap b;
         try{
             b = toRoundCorner(bitmap, 10);
         }
@@ -186,7 +145,6 @@ public class Describe extends Activity {
 
             mEditText.setText("");
             if (e != null) {
-                //mEditText.setText("Error: " + e.getMessage());
                 mEditText.setText("Oops! Maybe the image is not yet uploaded, or the Internet connection needs to be reset :-)");
                 this.e = null;
             } else {
@@ -194,23 +152,10 @@ public class Describe extends Activity {
                 AnalysisResult result = gson.fromJson(data, AnalysisResult.class);
 
                 for (Caption caption: result.description.captions) {
-                    //mEditText.append("Caption: " + caption.text + ", confidence: " + caption.confidence + "\n");
-                    //mEditText.append(caption.text + ".\nConfidence: " + Math.round(caption.confidence*1000)/10.0 + "%\n");
                     if(caption.confidence>0.7) mEditText.append("I'm sure that it is "+caption.text +"! :-)\n");
                     else if(caption.confidence>0.3) mEditText.append("I'm not very sure, but is it "+caption.text +"?\n");
                     else mEditText.append("So hard to recognize this picture:-( But it looks like "+caption.text +".\n");
                 }
-                /*
-                mEditText.append("\nAnd I found following keywords related to this picture: ");
-
-                boolean n = false;
-                for (String tag: result.description.tags) {
-                    if(n)  mEditText.append("; ");
-                    else n = true;
-                    mEditText.append(tag);
-                }
-                mEditText.append(".");
-                */
             }
         }
     }

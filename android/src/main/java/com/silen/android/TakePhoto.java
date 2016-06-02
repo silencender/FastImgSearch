@@ -15,29 +15,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/**
- * 拍照及从图库选择照片框架
- * 从相册选择照片进行裁剪，从相机拍取照片进行裁剪<br>
- * 从相册选择照片（不裁切），并获取照片的路径<br>
- * 拍取照片（不裁切），并获取照片路径
- *
- * @author JPH
- * @date 2015.08.04
- */
+
 public class TakePhoto {
-    /**
-     * request Code 从相册选择照片并裁切
-     **/
+
     public final static int PIC_SELECT_CROP = 123;
 
-    /**
-     * request Code 拍取照片并裁切
-     **/
     public final static int PIC_TAKE_CROP = 124;
 
-    /**
-     * request Code 裁切照片
-     **/
     public final static int PIC_CROP = 125;
     private final int outputX=1200;//裁剪默认宽度
     private final int outputY=1200;//裁剪默认高度

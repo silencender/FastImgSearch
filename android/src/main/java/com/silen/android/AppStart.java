@@ -7,9 +7,6 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
-/**
- * Created by Silen on 5/4/2016.
- */
 public class AppStart extends Activity {
 
     @Override

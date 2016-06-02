@@ -24,10 +24,11 @@ public class Webview extends AppCompatActivity {
         searchEngine = data.getString("searchEngine");
         picurl = data.getString("picurl");
         setContentView(R.layout.activity_webview);
-        //setTitle("Browser");
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle("Browser");
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         webView = (ProgressBarWebView) findViewById(R.id.webView);
         webView.loadUrl(searchEngine+picurl);
     }
@@ -46,6 +47,10 @@ public class Webview extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if(id == android.R.id.home){
+            this.finish();
+            return true;
+        }
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_engine) {

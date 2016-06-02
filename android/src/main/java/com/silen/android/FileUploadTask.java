@@ -1,9 +1,5 @@
 package com.silen.android;
 
-/**
- * Created by Silen on 4/23/2016.
- */
-
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.widget.Toast;
