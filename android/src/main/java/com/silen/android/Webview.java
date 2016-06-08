@@ -2,6 +2,7 @@ package com.silen.android;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -62,6 +63,13 @@ public class Webview extends AppCompatActivity {
                 searchEngine = getString(R.string.googleEngine);
                 webView.loadUrl(searchEngine+picurl);
             }
+            return true;
+        }
+
+        if (id == R.id.action_browser) {
+            String webUrl = webView.getUrl();
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webUrl));
+            startActivity(browserIntent);
             return true;
         }
 
